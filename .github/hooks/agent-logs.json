@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "powershell": "powershell -NoProfile -ExecutionPolicy Bypass -File .github/hooks/record-agent-log.ps1 -Event userPromptSubmitted",
+        "comment": "Record submitted prompts in the repository"
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "powershell": "powershell -NoProfile -ExecutionPolicy Bypass -File .github/hooks/record-agent-log.ps1 -Event agentStop",
+        "comment": "Record completed assistant responses in the repository"
+      }
+    ]
+  }
+}

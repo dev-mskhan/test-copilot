@@ -1,19 +1,15 @@
 # test-copilot
 
-This repository contains configuration for integrating the [Entire CLI](https://github.com/entireio/cli) with GitHub Copilot CLI. It currently has no application source code or build/test commands.
+This repository configures GitHub Copilot CLI hooks to record submitted prompts and completed assistant responses as JSONL.
 
-## Configuration
+## Agent conversation logs
 
-- `.github/hooks/entire.json` enables Entire integration, disables telemetry, links commits, and stores checkpoints using Git refs.
-- `.entire/settings.json` registers Entire CLI hooks for Copilot CLI lifecycle and tool events.
-- `.entire/.gitignore` excludes local settings, logs, and temporary Entire data from version control.
+Copilot CLI writes one record for each submitted prompt and one for each completed assistant response to [`agent-logs/conversations.jsonl`](agent-logs/conversations.jsonl). Each record includes the hook's original payload and a timestamp. The hook stages the log automatically; commit and push as usual to publish it alongside code changes. It does not create commits or push on its own.
 
-The hooks invoke the `entire` executable when it is available. Install and configure the Entire CLI if you want those hooks to record session activity; without it, the Bash hook commands exit without running.
+The hooks are configured in `.github/hooks/agent-logs.json` and use the PowerShell script at `.github/hooks/record-agent-log.ps1`. Start a new Copilot CLI session after installing or changing the hooks so the CLI loads the configuration.
 
-## Agent logs
-
-A snapshot of the Entire CLI runtime log is published at [`agent-logs/entire.log`](agent-logs/entire.log). It contains runtime and lifecycle events, not the full conversation transcript. Local filesystem paths and session IDs are redacted in the published copy. The generated source log remains ignored under `.entire/logs/`.
+**Privacy:** prompts and responses may contain sensitive information. The conversation log is intended to be committed and visible to anyone with repository access; do not submit secrets or private data in prompts recorded here.
 
 ## Development
 
-There are no application dependencies or build steps in this repository. Changes to the integration can be made directly in the configuration files above.
+There are no application dependencies or build steps in this repository.
